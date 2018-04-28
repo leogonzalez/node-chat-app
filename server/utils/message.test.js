@@ -1,5 +1,5 @@
 const expect = require("expect");
-const { generateMessage } = require("./message");
+const { generateMessage, generateLocationMessage } = require("./message");
 
 describe("generateMessage function", () => {
   it("should generate the correct message object", () => {
@@ -7,6 +7,17 @@ describe("generateMessage function", () => {
 
     expect(res.from).toEqual("Admin");
     expect(res.text).toEqual("This is from admin");
+    // expect(res.createdAt).toBeA("number");
+    expect(typeof res.createdAt).toBe("number");
+  });
+});
+
+describe("generateLocationMessage function", () => {
+  it("should generate the correct location message object", () => {
+    const res = generateLocationMessage("Admin", -25, -46);
+
+    expect(res.from).toEqual("Admin");
+    expect(res.url).toEqual("https://www.google.com/maps/@-25,-46");
     // expect(res.createdAt).toBeA("number");
     expect(typeof res.createdAt).toBe("number");
   });
