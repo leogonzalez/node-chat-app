@@ -13,30 +13,32 @@ const io = socketIO(server);
 app.use(express.static(publicPath));
 
 io.on("connection", socket => {
+
+  //log at the server to let know new connection
   console.log("New connection");
+
+  // log to the new user, from server, the welcome message
   socket.emit(
     "newMessage",
     generateMessage("Admin", "Welcome to the chat app")
   );
 
+  //let all the clients know new connection
   socket.broadcast.emit(
     "newMessage",
     generateMessage("Admin", "New user joined")
   );
 
+  //log on server that someone Disconnected
   socket.on("disconnect", () => {
     console.log("Client Disconnected");
   });
 
-  // listening for email events from Client
-  socket.on("createMessage", msg => {
+  // listening for msg events from Client
+  socket.on("createMessage", (msg, callback) => {
     console.log("New message from Client", msg);
-    // io.emit("newMessage", {
-    //   from: msg.from,
-    //   text: msg.text,
-    //   createdAt: new Date().getTime()
-    // })
     socket.broadcast.emit("newMessage", generateMessage(msg.from, msg.text));
+    callback('This is from the server');
   });
 });
 
