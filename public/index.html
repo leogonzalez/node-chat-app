@@ -22,10 +22,29 @@
       </div>
     </div>
 
-    <div id="message-template" type='text/template'>
-      <p>{{text}}</p>
-    </div>
+    <script id="message-template" type='text/template'>
+      <li class="message">
+        <div class="message__title">
+          <h4>{{from}}</h4>
+          <span>{{createdAt}}</span>
+        </div>
+        <div class="message__body">
+          <p>{{text}}</p>
+        </div>
+      </li>
+    </script>
 
+    <script id="location-message-template" type='text/template'>
+      <li class="message">
+        <div class="message__title">
+          <h4>{{from}}</h4>
+          <span>{{createdAt}}</span>
+        </div>
+        <div class="message__body">
+          <a href="{{url}}" target="_blank">Current Location</a>
+        </div>
+      </li>
+    </script>
 
     <script src="/socket.io/socket.io.js" charset="utf-8"></script>
     <script src="/libs/jquery-3.3.1.min.js" charset="utf-8"></script>
