@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 const { generateMessage, generateLocationMessage } = require("./utils/message");
 
 const publicPath = path.join(__dirname, "../public");
+const { isRealString} = require('./utils/validation')
 const app = new express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -17,17 +18,30 @@ io.on("connection", socket => {
   //log at the server to let know new connection
   console.log("New connection");
 
-  // log to the new user, from server, the welcome message
-  socket.emit(
-    "newMessage",
-    generateMessage("Admin", "Welcome to the chat app")
-  );
+  socket.on('join', (params, callback) => {
+    if (!isRealString(params.name) || !isRealString(params.room)) {
+      callback('Params required')
+    }
 
-  //let all the clients know new connection
-  socket.broadcast.emit(
-    "newMessage",
-    generateMessage("Admin", "New user joined")
-  );
+    socket.join(params.room);
+    //socket.leave(params.room)
+
+    // io.emit - emit to everybody || io.to(params.room).emit() - send to everyone in the room
+    // socket.broadcast.emit - everyone except the current user || socket.broadcast.to everyone on the room
+    // socket.emit - emit to one user
+    // log to the new user, from server, the welcome message
+    socket.emit(
+      "newMessage",
+      generateMessage("Admin", "Welcome to the chat app")
+    );
+
+    //let all the clients know new connection
+    socket.broadcast.to(params.room).emit(
+      "newMessage",
+      generateMessage("Admin", `${params.name} has joined`)
+    );
+    callback()
+  })
 
   //log on server that someone Disconnected
   socket.on("disconnect", () => {

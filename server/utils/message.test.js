@@ -17,7 +17,7 @@ describe("generateLocationMessage function", () => {
     const res = generateLocationMessage("Admin", -25, -46);
 
     expect(res.from).toEqual("Admin");
-    expect(res.url).toEqual("https://www.google.com/maps/@-25,-46");
+    expect(res.url).toEqual("https://www.google.com/maps/place/-25,-46");
     // expect(res.createdAt).toBeA("number");
     expect(typeof res.createdAt).toBe("number");
   });
